@@ -1,150 +1,169 @@
-# 🏋️‍♂️ Gym Management System
+# Gym System
 
-A **Windows Forms Application** built using **C# (.NET Framework)** and **Entity Framework Core**, following a **3-Tier Architecture** design pattern.  
-This project provides a complete solution to manage gym operations including clients, instructors, employees, packages, attendance, and finance records.
+A Windows desktop application for running a gym: members, packages, coaches, attendance, payments, equipment, and staff access.
 
----
-
-## 🧩 Project Architecture (3-Tier)
-
-The system follows the **3-Tier Architecture** pattern for separation of concerns and maintainability:
-
-
-### 📁 Layers Overview
-
-1. **GymManagementSystemWinForms**  
-   - Presentation Layer (UI)  
-   - Contains all Windows Forms for user interaction.  
-
-2. **GymManagementSystemServices**  
-   - Business Logic Layer (Services)  
-   - Contains logic for handling data between the UI and the Data Layer.  
-
-3. **GymManagementSystemData**  
-   - Data Access Layer  
-   - Contains models, DbContext, and Entity Framework Core configurations.
+Built with **C#**, **.NET 8**, **Windows Forms**, **Entity Framework Core**, and **SQL Server**, in a **3-tier** layout.
 
 ---
 
-## 🧱 Models
+## Architecture
 
-The system manages several entities related to the gym:
-
-| Model Name     | Description |
-|----------------|-------------|
-| **Client**      | Stores client information, package, and payment details. |
-| **Attendance**  | Tracks attendance records of clients. |
-| **Employee**    | Stores gym employee data. |
-| **Instructor**  | Holds instructor (coach) details and assigned packages. |
-| **Package**     | Defines gym subscription plans and details. |
-| **Payment**     | Records client payments and related information. |
-| **FinanceRecord** | Keeps monthly finance statistics (scheduled, paid, overdue). |
+| Project | Layer | Responsibility |
+|---------|--------|----------------|
+| **GymMSWF** | Presentation | Windows Forms, navigation, and dialogs |
+| **GymServices** | Business | Membership rules, billing, attendance, and roles |
+| **GymData** | Data | Models, `DbContext`, and EF Core migrations |
 
 ---
 
-## 🧠 Services
+## What the system does
 
-The **Services Layer** handles all core business operations:
-
-| Service Name | Purpose |
-|---------------|----------|
-| **AttendanceService** | Manages attendance tracking and reporting. |
-| **ClientServices** | Handles CRUD operations for clients. |
-| **CoachService** | Manages instructors' data and schedules. |
-| **EmployeeServices** | Handles employee management. |
-| **FinanceService** | Calculates and manages finance records (income, payments). |
-| **PackageService** | Manages gym packages and related offers. |
-| **PaymentService** | Records and validates client payments. |
+- Sign-in with a username and password. Each role only sees the pages it is allowed to open, and only the actions it is allowed to take.
+- Register a client on a package and lock a billing cycle of **1, 3, 6, or 12 months**. The end date and the invoice amount come from that choice.
+- One invoice is created for the whole cycle. Staff collect it from the Payments page. The amount is not typed again.
+- After the invoice is paid, the client status becomes active. Check-in works only inside the paid period, and it shows which session this is and how many remain.
+- If the package has ended or the invoice is still unpaid, check-in stops and explains why.
+- Manage coaches, employees, equipment, and a dashboard for packages, active memberships, and the month's revenue.
 
 ---
 
-## 🖥️ Main Forms
+## Roles
 
-| Form Name | Purpose |
-|------------|----------|
-| **LogInForm** | User authentication form. |
-| **Home** | Main navigation hub after login. |
-| **Dashboard** | Displays statistics and summaries (clients, finance, attendance). |
-| **Packages** | Displays and manages gym subscription packages. |
-| **InstructorForm** | Shows instructor details. |
-| **ClientPage** | Displays all client data and history. |
-| **EmployeeForm** | Manages employees. |
-| **PaymentForm** | Handles payment operations. |
-| **About** | Application information page. |
-| **FAQ** | Frequently Asked Questions section. |
-| **AddClient / AddEmployee / AddInstructor / AddPackageForm / AddPayment** | Forms for adding new entities. |
-| **EditInstructorForm / EditPackageForm** | Forms for editing existing data. |
+Access is stored per screen. **Can see** opens the page. **Can edit** allows add, update, delete, check-in, and collecting a payment.
+
+| Role | Typical access |
+|------|----------------|
+| **Admin** | Every page, view and edit. This role stays fully open. |
+| **Reception** | Dashboard and packages (view). Clients, attendance, and payments (edit). Equipment (view). |
+| **Coach** | Packages and clients (view). Attendance (edit). |
+| **User** | Packages, equipment, and payments (view). Clients and attendance (edit). |
+
+An administrator can add roles and change these checkboxes from the **Users** page. A change to the signed-in role applies on the next sign-in.
 
 ---
 
----
+## Main screens
 
-## 🔐 Roles & Access Control (Admin & User)
-
-The system supports two main roles with different access levels and privileges:
-
-| Role | Permissions & Access |
-|------|----------------------|
-| **Admin** | - Full access to all system features.<br> - Can **add, edit, and delete** Clients, Employees, Instructors, Packages, and Payments.<br> - Can view and manage **Finance Records** and **Attendance Reports**.<br> - Can create new users and assign roles.<br> - Access to **Dashboard**, **All Management Forms**, and **System Settings**. |
-| **User** | - Limited access to basic views.<br> - Can **view** Clients, Instructors, and Packages but **cannot delete or modify** data.<br> - Can record or check **Attendance**.<br> - Has access to **Home**, **ClientPage**, and **FAQ**.<br> - Cannot access **Finance** or **Employee Management** sections. |
-
----
-
-## 🧮 Features
-
-- Manage **Clients**, **Employees**, **Instructors**, and **Packages**.
-- Record and monitor **Attendance**.
-- Handle **Payments** and generate **Finance Reports**.
-- Track **Remaining Sessions**, **Active Packages**, and **Payment History**.
-- Built with a clean **3-tier structure** for scalability and easy maintenance.
+| Screen | What it is for |
+|--------|----------------|
+| **Log in** | Username and password |
+| **Home** | Package count, active memberships, monthly revenue, and the latest check-in |
+| **Dashboard** | Payment rings, the week's attendance, today's schedule, and notifications |
+| **Packages** | Package cards, with a billing cycle and a coach |
+| **Clients** | Member list, status, cycle, amount, and check-in |
+| **Attendance** | Who can train today, the current session, and remaining sessions |
+| **Instructors** | Coach cards |
+| **Employees** | Staff records |
+| **Users** | Accounts, roles, and page permissions |
+| **Payments** | Cycle invoices. Collect marks an invoice as paid |
+| **Equipment** | Gym equipment, condition, and availability |
+| **FAQ / About** | Help and gym information |
 
 ---
 
-## 🛠️ Technologies Used
+## Models
 
-| Technology | Description |
-|-------------|-------------|
-| **C# (.NET Framework)** | Core programming language |
-| **Entity Framework Core** | ORM for database management |
-| **Windows Forms (WinForms)** | UI Framework |
-| **SQL Server** | Database backend |
-| **LINQ** | For querying data |
-| **3-Tier Architecture** | Structural pattern for separation of concerns |
+| Model | Holds |
+|-------|--------|
+| **Client** | Member profile, package, billing cycle, and dates |
+| **Package** | Title, price, sessions, default cycle, and coach |
+| **Payment** | The invoice generated for the current cycle |
+| **Attendance** | A check-in for a member |
+| **Instructor** | Coach profile |
+| **Employee** | Staff profile, username, and role name |
+| **AppRole / RolePermission** | Role name and what each screen can see or edit |
+| **Equipment** | Item, quantity, condition, and availability |
+| **FinanceRecord** | Monthly finance figures |
 
 ---
 
-## 👥 Team Members
+## Technologies
+
+| Technology | Use |
+|------------|-----|
+| C# / .NET 8 | Application |
+| Windows Forms | User interface |
+| Entity Framework Core | Data access and migrations |
+| SQL Server | Database |
+| LINQ | Queries |
+
+---
+
+## Team
 
 | Name | Role |
 |------|------|
 | **Mennatullah Atef** | Developer |
 | **Rawan Ahmed** | Developer |
 | **Abdalaa Khaleel** | Developer |
-| **Ramiz Magdy** | Developer |
+| **Ramiz Magdy Awad** | Developer |
+
+The team shared the UI, the services, and testing. Gym System is founded by **Ramiz Magdy Awad**.
 
 ---
 
-## 🧑‍🤝‍🧑 Team Collaboration & Work Distribution
+## Screenshots
 
-We worked together as a **team** throughout the entire development process.  
-All members participated in **coding, designing, and testing** different parts of the project.
+### Log in
 
-### 🧠 Collaboration Highlights:
-- We always worked together in **team meetings**, sharing ideas and helping each other solve problems.  
-- Every member contributed to both **frontend (WinForms UI)** and **backend (EF Core & Services)**.  
-- Some tasks were **shared between two members**, such as working on attendance logic and dashboard integration.  
-- The project was built through **continuous communication, feedback, and collaboration** on all modules.
+<img src="screenshots/01-login.png" alt="Log in" width="900" />
 
----
+### Home
 
-## 📸 Screenshots (Optional)
+<img src="screenshots/02-home.png" alt="Home cards and latest check-in" width="900" />
 
-Here are some screenshots of the **Gym Management System** showing the interface, forms, and features of the application:
+### Dashboard
 
----
+<img src="screenshots/03-dashboard.png" alt="Payments, attendance, schedule, and notifications" width="900" />
 
-<div align="center"> <img src="https://github.com/user-attachments/assets/58b7ca6d-59a3-465a-bdb7-bd985b865b17" height="300" /> <img src="https://github.com/user-attachments/assets/b0e449cd-39df-415a-825e-51b4aeebef9a" height="300" /> <img src="https://github.com/user-attachments/assets/ec22f553-c7b4-482c-9b8d-30a5a04ae8b4" height="300" /> <img src="https://github.com/user-attachments/assets/29d79511-130e-4d17-83c7-8f42266a102f" height="300" /> <img src="https://github.com/user-attachments/assets/43e9da5a-52b8-4bce-a6b2-cb88cca933f6" height="300" /> <img src="https://github.com/user-attachments/assets/206470cb-170c-47c9-9067-8f11fd0eb0b3" height="300" /> <img src="https://github.com/user-attachments/assets/b0899f2c-8408-4e51-ad15-b051a0219306" height="300" /> <img src="https://github.com/user-attachments/assets/7f8dc3a1-31e0-43d2-b5e1-8f49aae2981a" height="300" /> <img src="https://github.com/user-attachments/assets/0809c7e3-b1ce-4b47-bbbb-8baf4b6fe5c7" height="300" /> <img src="https://github.com/user-attachments/assets/767cdd7a-5402-4cc3-9663-24efaf4c81ac" height="300" /> <img src="https://github.com/user-attachments/assets/de57e510-4914-4107-9c32-c7a377805199" height="300" /> <img src="https://github.com/user-attachments/assets/ddd41556-a024-40b1-a836-e245acb33b53" height="300" /> <img src="https://github.com/user-attachments/assets/524f209a-a218-4a08-bd92-17ff9f3c52f4" height="300" /> <img src="https://github.com/user-attachments/assets/a961718b-d90c-4e45-8886-b65192303474" height="300" /> <img src="https://github.com/user-attachments/assets/33f60b68-8217-418b-8c60-b0e5802eb451" height="300" /> </div>
+<img src="screenshots/04-dashboard-schedule.png" alt="Today's schedule and a check-in notification" width="900" />
 
----
+### Packages
 
+<img src="screenshots/05-packages.png" alt="Package card" width="900" />
 
+<img src="screenshots/06-add-package.png" alt="Add a package" width="900" />
+
+<img src="screenshots/07-edit-package.png" alt="Edit a package" width="900" />
+
+### Clients
+
+<img src="screenshots/08-clients.png" alt="Client list" width="900" />
+
+<img src="screenshots/09-add-client.png" alt="Add a client and choose a billing cycle" width="900" />
+
+### Attendance
+
+<img src="screenshots/10-attendance.png" alt="Attendance board and remaining sessions" width="900" />
+
+### Instructors
+
+<img src="screenshots/11-instructors.png" alt="Instructor cards" width="900" />
+
+<img src="screenshots/12-add-instructor.png" alt="Add an instructor" width="900" />
+
+### Employees
+
+<img src="screenshots/13-employees.png" alt="Employee list" width="900" />
+
+<img src="screenshots/14-add-employee.png" alt="Add an employee" width="900" />
+
+### Users and roles
+
+<img src="screenshots/15-users-roles.png" alt="Users and role permissions" width="900" />
+
+### Payments
+
+<img src="screenshots/16-payments.png" alt="Cycle invoices" width="900" />
+
+<img src="screenshots/17-collect-payment.png" alt="Collect a payment" width="900" />
+
+### Equipment
+
+<img src="screenshots/18-equipment.png" alt="Add equipment" width="900" />
+
+### FAQ and About
+
+<img src="screenshots/19-faq.png" alt="FAQ" width="900" />
+
+<img src="screenshots/20-about.png" alt="About Gym System" width="900" />
